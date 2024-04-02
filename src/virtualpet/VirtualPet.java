@@ -27,6 +27,10 @@ public class VirtualPet {
         int maxHealth;
         int maxFood;
         int maxEnergy;
+        boolean correct = false;
+        boolean choosePet = true;
+        int rdmNum;
+        boolean accurate = false;
         
         // Starting screen 
         System.out.println(" _     ___ _   _  ___  _   _  ____    ____  _____ _____   ____   _    ____     _    ____ ___ ____  _____"); 
@@ -41,19 +45,23 @@ public class VirtualPet {
         System.out.println("");        
         
         // Enter username and password
-        System.out.print("Username: ");
-        String username = kb.nextLine();
-        System.out.print("Password: ");
-        String password = kb.nextLine();
+        for (int tries = 2; tries > -1 && !(correct); tries--) {
+            System.out.print("Username: ");
+            String username = kb.nextLine();
+            System.out.print("Password: ");
+            String password = kb.nextLine();
         
-        System.out.println("");
-        System.out.println("_________________________________________________________________________________________________________________");
-        System.out.println("");        
-        
-        if ("snoopy".equalsIgnoreCase(username) || "toto".equalsIgnoreCase(password)) {
+        while ("snoopy".equalsIgnoreCase(username) || "toto".equalsIgnoreCase(password)) {
+            
+            correct = true;
             
             // User's action
-            System.out.println("1. Start");
+            if (choosePet) {
+                System.out.println("1. Start");
+            }
+            else {
+                System.out.println("1. Play/Interact");
+            }
             System.out.println("2. Instructions");
             System.out.println("3. Exit");
             System.out.println("");
@@ -61,6 +69,9 @@ public class VirtualPet {
             String action = kb.nextLine();
             
             if ("1".equalsIgnoreCase(action) || "start".equalsIgnoreCase(action)) {
+                
+                choosePet = false;
+                
                 System.out.println("");
                 System.out.println("_________________________________________________________________________________________________________________");
                 System.out.println("");        
@@ -92,7 +103,7 @@ public class VirtualPet {
                 System.out.print("Choice: ");
                 String pet = kb.nextLine();
                 if (pet == "1") {
-                    System.out.println("You chose the DOG!!");
+                    System.out.println("You chose the dog!!");
                 }
                 else {
                     System.out.println("You chose the rabbit!!"); 
@@ -167,11 +178,39 @@ public class VirtualPet {
                 System.out.println("Maximum Energy: " + maxEnergy);
                 
             }
+            else if ("1".equalsIgnoreCase(action) || "play".equalsIgnoreCase(action) || "interact".equalsIgnoreCase(action)) {
+                System.out.println("");
+                System.out.println("_________________________________________________________________________________________________________________");
+                System.out.println(""); 
+                
+                System.out.println("Game 1 - Number Guessing Game");
+                System.out.println("Instructions: You have 5 tries to guess a random number between 1-100.");
+                
+                rdmNum = rdm.nextInt(100) + 1;
+                for (int guess = 4; guess > -1 && !(accurate); guess--) {
+                    int userNum = kb.nextInt();
+                    if (rdmNum > userNum) {
+                        System.out.println("Too Low.");
+                    }
+                    else if (rdmNum < userNum) {
+                        System.out.println("Too High.");
+                    }
+                    else {
+                        accurate = true;
+                        System.out.println("That is correct!!");
+                    }
+                }
+                
+            }
             else if ("3".equalsIgnoreCase(action) || "exit".equalsIgnoreCase(action)) {
             System.exit(0);
             }
         }
-   
+        System.out.println("That's wrong!! You have " + tries + " tries left. ");
+        System.out.println("");
+        System.out.println("_________________________________________________________________________________________________________________");
+        System.out.println("");        
+        }
     }
     
 }
