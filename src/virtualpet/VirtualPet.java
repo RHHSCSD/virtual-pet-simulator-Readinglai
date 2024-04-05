@@ -4,6 +4,7 @@
  */
 package virtualpet;
 import java.util.*;
+import java.lang.*;
 /**
  *
  * @author michael.roy-diclemen
@@ -27,6 +28,8 @@ public class VirtualPet {
         int maxHealth;
         int maxFood;
         int maxEnergy;
+        double money = 0;
+        double earnings = 0;
         boolean correct = false;
         boolean choosePet = true;
         int rdmNum;
@@ -51,7 +54,7 @@ public class VirtualPet {
             System.out.print("Password: ");
             String password = kb.nextLine();
         
-        while ("snoopy".equalsIgnoreCase(username) || "toto".equalsIgnoreCase(password)) {
+        while ("snoopy".equalsIgnoreCase(username) && "toto".equalsIgnoreCase(password)) {
             
             correct = true;
             
@@ -68,7 +71,7 @@ public class VirtualPet {
             System.out.print("Enter what you want to do: ");
             String action = kb.nextLine();
             
-            if ("1".equalsIgnoreCase(action) || "start".equalsIgnoreCase(action)) {
+            if (("1".equalsIgnoreCase(action) || "start".equalsIgnoreCase(action)) && choosePet) {
                 
                 choosePet = false;
                 
@@ -118,10 +121,10 @@ public class VirtualPet {
                 System.out.println("1. Choose a name myself!");
                 System.out.println("2. Choose a name for me!");
                 System.out.print("My decision (1 or 2): ");
-                int nameDecision = kb.nextInt();
+                String nameDecision = kb.nextLine();
                 
                 // Name by user
-                if (nameDecision == 1) {
+                if (nameDecision.equals("1")) {
                     System.out.print("Type the name for your pet: ");
                     name = kb.nextLine();
                 }
@@ -162,6 +165,7 @@ public class VirtualPet {
                     }
                     
                 }
+                
                 System.out.println("Your pet, named " + name + ", has been born!");
                 
                 System.out.println("");
@@ -177,6 +181,9 @@ public class VirtualPet {
                 System.out.println("Maximum Food: " + maxFood);
                 System.out.println("Maximum Energy: " + maxEnergy);
                 
+                System.out.println("");
+                System.out.println("_________________________________________________________________________________________________________________");
+                System.out.println(""); 
             }
             else if ("1".equalsIgnoreCase(action) || "play".equalsIgnoreCase(action) || "interact".equalsIgnoreCase(action)) {
                 System.out.println("");
@@ -187,8 +194,11 @@ public class VirtualPet {
                 System.out.println("Instructions: You have 5 tries to guess a random number between 1-100.");
                 
                 rdmNum = rdm.nextInt(100) + 1;
+                System.out.println(rdmNum);
                 for (int guess = 4; guess > -1 && !(accurate); guess--) {
+                    System.out.print("Guess: ");
                     int userNum = kb.nextInt();
+                    String useless = kb.nextLine();
                     if (rdmNum > userNum) {
                         System.out.println("Too Low.");
                     }
@@ -198,9 +208,13 @@ public class VirtualPet {
                     else {
                         accurate = true;
                         System.out.println("That is correct!!");
+                        earnings = Math.pow(2, guess) * 100;
+                        money += earnings;
                     }
                 }
-                
+                System.out.println("The correct number is " + rdmNum + ".");
+                System.out.println("You earned $" + earnings + "!");
+                System.out.println("You currently have $" + money + "!");
             }
             else if ("3".equalsIgnoreCase(action) || "exit".equalsIgnoreCase(action)) {
             System.exit(0);
@@ -212,5 +226,4 @@ public class VirtualPet {
         System.out.println("");        
         }
     }
-    
 }
