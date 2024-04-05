@@ -28,12 +28,17 @@ public class VirtualPet {
         int maxHealth;
         int maxFood;
         int maxEnergy;
+        int index;
         double money = 0;
         double earnings = 0;
+        String correctStr = "AABBCCDDEE";
+        String shuffledStr = "";
+        String userStr = "XXXXXXXXXX";
         boolean correct = false;
         boolean choosePet = true;
         int rdmNum;
         boolean accurate = false;
+        boolean equal = true;
         
         // Starting screen 
         System.out.println(" _     ___ _   _  ___  _   _  ____    ____  _____ _____   ____   _    ____     _    ____ ___ ____  _____"); 
@@ -194,8 +199,7 @@ public class VirtualPet {
                 System.out.println("Instructions: You have 5 tries to guess a random number between 1-100.");
                 
                 rdmNum = rdm.nextInt(100) + 1;
-                System.out.println(rdmNum);
-                for (int guess = 4; guess > -1 && !(accurate); guess--) {
+                for (int guess = 5; guess > -1 && !(accurate); guess--) {
                     System.out.print("Guess: ");
                     int userNum = kb.nextInt();
                     String useless = kb.nextLine();
@@ -215,6 +219,62 @@ public class VirtualPet {
                 System.out.println("The correct number is " + rdmNum + ".");
                 System.out.println("You earned $" + earnings + "!");
                 System.out.println("You currently have $" + money + "!");
+                
+                System.out.println("");
+                System.out.println("_________________________________________________________________________________________________________________");
+                System.out.println("");   
+                
+                System.out.println("Game 2 - Guess the Pairs!");
+                System.out.println("Instructions: You have a randomly shuffled sequence of 2A's, 2B's, 2C's, 2D's, 2E's, try to guess the location where two identical letters are located. ");
+                
+                for (int shuffle = 0; shuffle < 10; shuffle++) {
+                    index = rdm.nextInt(correctStr.length());
+                    shuffledStr = shuffledStr + correctStr.charAt(index);
+                    if (index == 0) {
+                        correctStr = correctStr.substring(1);
+                    }
+                    else if (index == correctStr.length()) {
+                        correctStr = correctStr.substring(0, correctStr.length() - 1);
+                    }
+                    else {
+                        correctStr = correctStr.substring(0, index) + correctStr.substring(index + 1);
+                    }
+                }
+                StringBuilder str = new StringBuilder(userStr);
+                StringBuilder compareStr = new StringBuilder(shuffledStr);
+                for (int guessnd = 25; guessnd > -1; guessnd--) {
+                    System.out.println("Current Sequence: " + str);
+                    System.out.print("Enter the two positions with a space in the middle: ");
+                    int guess1 = kb.nextInt();
+                    int guess2 = kb.nextInt();
+                    String uselessGuess = kb.nextLine();
+                    if (shuffledStr.charAt(guess1) == shuffledStr.charAt(guess2)) {
+                        str.setCharAt(guess1, shuffledStr.charAt(guess1));                    
+                        str.setCharAt(guess2, shuffledStr.charAt(guess2));
+                    }
+                    equal = true;
+                    for (int lengths = 0; lengths < 10; lengths++) {
+                        if (compareStr.charAt(lengths) != str.charAt(lengths)) {
+                            equal = false;
+                        }
+                    }
+                    if (equal) {
+                        earnings = guessnd * 50;
+                        money += earnings;
+                        break;
+                    }
+                    else {
+                        earnings = 0;
+                    }
+                    System.out.println("You have " + guessnd + " guesses left. ");
+                }
+                System.out.println("You earned $" + earnings + "!");
+                System.out.println("You currently have $" + money + "!");
+                
+                System.out.println("");
+                System.out.println("_________________________________________________________________________________________________________________");
+                System.out.println("");   
+                
             }
             else if ("3".equalsIgnoreCase(action) || "exit".equalsIgnoreCase(action)) {
             System.exit(0);
