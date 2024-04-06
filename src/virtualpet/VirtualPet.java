@@ -39,6 +39,7 @@ public class VirtualPet {
         int rdmNum;
         boolean accurate = false;
         boolean equal = true;
+        String newStr = "";
         
         // Starting screen 
         System.out.println(" _     ___ _   _  ___  _   _  ____    ____  _____ _____   ____   _    ____     _    ____ ___ ____  _____"); 
@@ -196,78 +197,85 @@ public class VirtualPet {
                 System.out.println(""); 
                 
                 System.out.println("Game 1 - Number Guessing Game");
-                System.out.println("Instructions: You have 5 tries to guess a random number between 1-100.");
-                
-                rdmNum = rdm.nextInt(100) + 1;
-                for (int guess = 5; guess > -1 && !(accurate); guess--) {
-                    System.out.print("Guess: ");
-                    int userNum = kb.nextInt();
-                    String useless = kb.nextLine();
-                    if (rdmNum > userNum) {
-                        System.out.println("Too Low.");
-                    }
-                    else if (rdmNum < userNum) {
-                        System.out.println("Too High.");
-                    }
-                    else {
-                        accurate = true;
-                        System.out.println("That is correct!!");
-                        earnings = Math.pow(2, guess) * 100;
-                        money += earnings;
-                    }
-                }
-                System.out.println("The correct number is " + rdmNum + ".");
-                System.out.println("You earned $" + earnings + "!");
-                System.out.println("You currently have $" + money + "!");
+                System.out.println("Game 2 - Guess the Pairs!");
+                System.out.println("Which game do you want to play? ");
+                System.out.print("Game (1 or 2): ");
+                String game = kb.nextLine();
                 
                 System.out.println("");
                 System.out.println("_________________________________________________________________________________________________________________");
-                System.out.println("");   
+                System.out.println("");
+                if (game.equals("1")) {
+                    System.out.println("Game 1 - Number Guessing Game");
+                    System.out.println("Instructions: You have 5 tries to guess a random number between 1-100.");
                 
-                System.out.println("Game 2 - Guess the Pairs!");
-                System.out.println("Instructions: You have a randomly shuffled sequence of 2A's, 2B's, 2C's, 2D's, 2E's, try to guess the location where two identical letters are located. ");
-                
-                for (int shuffle = 0; shuffle < 10; shuffle++) {
-                    index = rdm.nextInt(correctStr.length());
-                    shuffledStr = shuffledStr + correctStr.charAt(index);
-                    if (index == 0) {
-                        correctStr = correctStr.substring(1);
-                    }
-                    else if (index == correctStr.length()) {
-                        correctStr = correctStr.substring(0, correctStr.length() - 1);
-                    }
-                    else {
-                        correctStr = correctStr.substring(0, index) + correctStr.substring(index + 1);
-                    }
-                }
-                StringBuilder str = new StringBuilder(userStr);
-                StringBuilder compareStr = new StringBuilder(shuffledStr);
-                for (int guessnd = 25; guessnd > -1; guessnd--) {
-                    System.out.println("Current Sequence: " + str);
-                    System.out.print("Enter the two positions with a space in the middle: ");
-                    int guess1 = kb.nextInt();
-                    int guess2 = kb.nextInt();
-                    String uselessGuess = kb.nextLine();
-                    if (shuffledStr.charAt(guess1) == shuffledStr.charAt(guess2)) {
-                        str.setCharAt(guess1, shuffledStr.charAt(guess1));                    
-                        str.setCharAt(guess2, shuffledStr.charAt(guess2));
-                    }
-                    equal = true;
-                    for (int lengths = 0; lengths < 10; lengths++) {
-                        if (compareStr.charAt(lengths) != str.charAt(lengths)) {
-                            equal = false;
+                    rdmNum = rdm.nextInt(100) + 1;
+                    for (int guess = 5; guess > -1 && !(accurate); guess--) {
+                        System.out.print("Guess: ");
+                        int userNum = kb.nextInt();
+                        String useless = kb.nextLine();
+                        if (rdmNum > userNum) {
+                            System.out.println("Too Low.");
+                        }
+                        else if (rdmNum < userNum) {
+                            System.out.println("Too High.");
+                        }
+                        else {
+                            accurate = true;
+                            System.out.println("That is correct!!");
+                            earnings = Math.pow(2, guess) * 100;
+                            money += earnings;
                         }
                     }
-                    if (equal) {
-                        earnings = guessnd * 50;
-                        money += earnings;
-                        break;
-                    }
-                    else {
-                        earnings = 0;
-                    }
-                    System.out.println("You have " + guessnd + " guesses left. ");
+                    System.out.println("The correct number is " + rdmNum + ".");
                 }
+                else {
+                    System.out.println("Game 2 - Guess the Pairs!");
+                    System.out.println("Instructions: You have a randomly shuffled sequence of 2A's, 2B's, 2C's, 2D's, 2E's, try to guess the location where two identical letters are located. You have 20 tries. ");
+                
+                    for (int shuffle = 0; shuffle < 10; shuffle++) {
+                        index = rdm.nextInt(correctStr.length());
+                        shuffledStr = shuffledStr + correctStr.charAt(index);
+                        if (index == 0) {
+                            correctStr = correctStr.substring(1);
+                        }
+                        else if (index == correctStr.length()) {
+                            correctStr = correctStr.substring(0, correctStr.length() - 1);
+                        }
+                        else {
+                            correctStr = correctStr.substring(0, index) + correctStr.substring(index + 1);
+                        }
+                    }
+                    for (int guessnd = 19; guessnd > -1; guessnd--) {
+                        System.out.println("Current Sequence: " + userStr);
+                        System.out.print("Enter the two positions with a space in the middle: ");
+                        int guess1 = kb.nextInt();
+                        int guess2 = kb.nextInt();
+                        String uselessGuess = kb.nextLine();
+                        if (shuffledStr.charAt(guess1) == shuffledStr.charAt(guess2)) {
+                            for (int lengths = 0; lengths < 10; lengths++) {
+                                if (lengths == guess1 || lengths == guess2) {
+                                    newStr = newStr + shuffledStr.charAt(guess1);
+                                }
+                                else {
+                                    newStr = newStr + userStr.charAt(lengths);
+                                }
+                            }
+                            userStr = newStr;
+                            newStr = "";
+                        }
+                        if (userStr.equals(shuffledStr)) {
+                            earnings = guessnd * 50;
+                            money += earnings;
+                            break;
+                        }
+                        else {
+                            earnings = 0;
+                        }
+                        System.out.println("You have " + guessnd + " guesses left. ");
+                    }
+                }       
+                
                 System.out.println("You earned $" + earnings + "!");
                 System.out.println("You currently have $" + money + "!");
                 
