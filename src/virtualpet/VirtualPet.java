@@ -10,6 +10,192 @@ import java.lang.*;
  * @author michael.roy-diclemen
  */
 public class VirtualPet {
+    
+    public static void choosePet() {
+        
+        Scanner kb = new Scanner(System.in);
+        
+        System.out.println("1. ");
+        System.out.println(" / \\__");
+        System.out.println("(    @\\___");
+        System.out.println(" /         O");
+        System.out.println("/   (_____/");
+        System.out.println("/_____/   U)");
+
+        System.out.println("");  
+        System.out.println("");  
+
+        // Pet 2
+        System.out.println("2. ");
+        System.out.println("  ,   ,_");
+        System.out.println("    (\\./)");
+        System.out.println("   >(^,^)<");
+        System.out.println("    (   )");
+        System.out.println("   (\")(\")");
+
+        System.out.println("");  
+        System.out.println("");  
+
+        // Choose Pet
+        System.out.println("Which pet do you want to choose? (1 or 2)");
+        System.out.print("Choice: ");
+        String pet = kb.nextLine();
+        if (pet.equals("1")) {
+            System.out.println("You chose the dog!!");
+        }
+        else {
+            System.out.println("You chose the rabbit!!"); 
+        }
+    }
+    public static void generateName() {
+        int letter1;
+        int letter2;
+        int letter3;
+        int letter4;
+        String name = "";
+        String consonants = "bcdfghjklmnpqrstvwxyz";
+        String vowels = "aeiou";
+        
+        Scanner kb = new Scanner(System.in);
+        Random rdm = new Random();
+        
+        System.out.println("Make a name for your pet!!");
+        System.out.println("1. Choose a name myself!");
+        System.out.println("2. Choose a name for me!");
+        System.out.print("My decision (1 or 2): ");
+        String nameDecision = kb.nextLine();
+
+        // Name by user
+        if (nameDecision.equals("1")) {
+            System.out.print("Type the name for your pet: ");
+            name = kb.nextLine();
+        }
+
+        // Name by generator
+        else {
+            letter1 = rdm.nextInt(21);
+            if (rdm.nextInt(10) == 9) {
+                name = name + consonants.substring(letter1, letter1 + 1) + consonants.substring(letter1, letter1 + 1);
+            }
+            else {
+                name = name + consonants.substring(letter1, letter1 + 1);
+            }
+
+            letter2 = rdm.nextInt(5);
+            if (rdm.nextInt(10) == 9) {
+                name = name + vowels.substring(letter2, letter2 + 1) + vowels.substring(letter2, letter2 + 1);
+            }
+            else {
+                name = name + vowels.substring(letter2, letter2 + 1);
+            }
+
+            letter3 = rdm.nextInt(21);
+            if (rdm.nextInt(10) == 9) {
+                name = name + consonants.substring(letter3, letter3 + 1) + consonants.substring(letter3, letter3 + 1);
+            }
+            else {
+                name = name + consonants.substring(letter3, letter3 + 1);
+            }
+
+            letter4 = rdm.nextInt(5);
+            if (rdm.nextInt(10) == 9) {
+                name = name + vowels.substring(letter4, letter4 + 1) + vowels.substring(letter4, letter4 + 1);
+            }
+            else {
+                name = name + vowels.substring(letter4, letter4 + 1);
+            }
+        }
+        System.out.println("Your pet, named " + name + ", has been born!");
+    }
+    public static double game1() {
+        
+        int rdmNum;
+        boolean accurate = false;
+        double earnings1 = 0;
+        
+        Scanner kb = new Scanner(System.in);
+        Random rdm = new Random();
+        
+        System.out.println("Game 1 - Number Guessing Game");
+        System.out.println("Instructions: You have 5 tries to guess a random number between 1-100.");
+
+        rdmNum = rdm.nextInt(100) + 1;
+        for (int guess = 5; guess > -1 && !(accurate); guess--) {
+            System.out.print("Guess: ");
+            int userNum = kb.nextInt();
+            String useless = kb.nextLine();
+            if (rdmNum > userNum) {
+                System.out.println("Too Low.");
+            }
+            else if (rdmNum < userNum) {
+                System.out.println("Too High.");
+            }
+            else {
+                accurate = true;
+                System.out.println("That is correct!!");
+                earnings1 = Math.pow(2, guess) * 100;
+            }
+        }
+        System.out.println("The correct number is " + rdmNum + ".");
+        return earnings1;
+    }
+    public static double game2() {
+        
+        double earnings2 = 0;
+        String correctStr = "AABBCCDDEE";
+        String shuffledStr = "";
+        String userStr = "XXXXXXXXXX";
+        int index;
+        String newStr = "";
+        
+        Scanner kb = new Scanner(System.in);
+        Random rdm = new Random();
+        
+        System.out.println("Game 2 - Guess the Pairs!");
+        System.out.println("Instructions: You have a randomly shuffled sequence of 2A's, 2B's, 2C's, 2D's, 2E's, try to guess the location where two identical letters are located. You have 20 tries. ");
+
+        for (int shuffle = 0; shuffle < 10; shuffle++) {
+            index = rdm.nextInt(correctStr.length());
+            shuffledStr = shuffledStr + correctStr.charAt(index);
+            if (index == 0) {
+                correctStr = correctStr.substring(1);
+            }
+            else if (index == correctStr.length()) {
+                correctStr = correctStr.substring(0, correctStr.length() - 1);
+            }
+            else {
+                correctStr = correctStr.substring(0, index) + correctStr.substring(index + 1);
+            }
+        }
+        for (int guessnd = 19; guessnd > -1; guessnd--) {
+            System.out.println("Current Sequence: " + userStr);
+            System.out.print("Enter the two positions with a space in the middle: ");
+            int guess1 = kb.nextInt();
+            int guess2 = kb.nextInt();
+            String uselessGuess = kb.nextLine();
+            if (shuffledStr.charAt(guess1) == shuffledStr.charAt(guess2)) {
+                for (int lengths = 0; lengths < 10; lengths++) {
+                    if (lengths == guess1 || lengths == guess2) {
+                        newStr = newStr + shuffledStr.charAt(guess1);
+                    }
+                    else {
+                        newStr = newStr + userStr.charAt(lengths);
+                    }
+                }
+                userStr = newStr;
+                newStr = "";
+            }
+            if (userStr.equals(shuffledStr)) {
+                earnings2 = guessnd * 50;
+                break;
+            }
+            else {
+                earnings2 = 0;
+            }
+            System.out.println("You have " + guessnd + " guesses left. ");
+        }
+        return earnings2;
+    }
 
     /**
      * @param args the command line arguments
@@ -18,28 +204,13 @@ public class VirtualPet {
         
         Scanner kb = new Scanner(System.in);
         Random rdm = new Random();
-        String consonants = "bcdfghjklmnpqrstvwxyz";
-        String vowels = "aeiou";
-        String name = "";
-        int letter1;
-        int letter2;
-        int letter3;
-        int letter4;
         int maxHealth;
         int maxFood;
         int maxEnergy;
-        int index;
-        double money = 0;
         double earnings = 0;
-        String correctStr = "AABBCCDDEE";
-        String shuffledStr = "";
-        String userStr = "XXXXXXXXXX";
+        double money = 0;
         boolean correct = false;
         boolean choosePet = true;
-        int rdmNum;
-        boolean accurate = false;
-        boolean equal = true;
-        String newStr = "";
         
         // Starting screen 
         System.out.println(" _     ___ _   _  ___  _   _  ____    ____  _____ _____   ____   _    ____     _    ____ ___ ____  _____"); 
@@ -85,94 +256,17 @@ public class VirtualPet {
                 System.out.println("_________________________________________________________________________________________________________________");
                 System.out.println("");        
                 
-                // Pet 1 
-                System.out.println("1. ");
-                System.out.println(" / \\__");
-                System.out.println("(    @\\___");
-                System.out.println(" /         O");
-                System.out.println("/   (_____/");
-                System.out.println("/_____/   U)");
-
-                System.out.println("");  
-                System.out.println("");  
-        
-                // Pet 2
-                System.out.println("2. ");
-                System.out.println("  ,   ,_");
-                System.out.println("    (\\./)");
-                System.out.println("   >(^,^)<");
-                System.out.println("    (   )");
-                System.out.println("   (\")(\")");
-        
-                System.out.println("");  
-                System.out.println("");  
-        
-                // Choose Pet
-                System.out.println("Which pet do you want to choose? (1 or 2)");
-                System.out.print("Choice: ");
-                String pet = kb.nextLine();
-                if (pet == "1") {
-                    System.out.println("You chose the dog!!");
-                }
-                else {
-                    System.out.println("You chose the rabbit!!"); 
-                }
+                // Choose pet
+                
+                choosePet();
                 
                 System.out.println("");
                 System.out.println("_________________________________________________________________________________________________________________");
                 System.out.println("");
                 
                 // Name pet
-                System.out.println("Make a name for your pet!!");
-                System.out.println("1. Choose a name myself!");
-                System.out.println("2. Choose a name for me!");
-                System.out.print("My decision (1 or 2): ");
-                String nameDecision = kb.nextLine();
                 
-                // Name by user
-                if (nameDecision.equals("1")) {
-                    System.out.print("Type the name for your pet: ");
-                    name = kb.nextLine();
-                }
-                
-                // Name by generator
-                else {
-                    
-                    letter1 = rdm.nextInt(21);
-                    if (rdm.nextInt(10) == 9) {
-                        name = name + consonants.substring(letter1, letter1 + 1) + consonants.substring(letter1, letter1 + 1);
-                    }
-                    else {
-                        name = name + consonants.substring(letter1, letter1 + 1);
-                    }
-                    
-                    letter2 = rdm.nextInt(5);
-                    if (rdm.nextInt(10) == 9) {
-                        name = name + vowels.substring(letter2, letter2 + 1) + vowels.substring(letter2, letter2 + 1);
-                    }
-                    else {
-                        name = name + vowels.substring(letter2, letter2 + 1);
-                    }
-                    
-                    letter3 = rdm.nextInt(21);
-                    if (rdm.nextInt(10) == 9) {
-                        name = name + consonants.substring(letter3, letter3 + 1) + consonants.substring(letter3, letter3 + 1);
-                    }
-                    else {
-                        name = name + consonants.substring(letter3, letter3 + 1);
-                    }
-                    
-                    letter4 = rdm.nextInt(5);
-                    if (rdm.nextInt(10) == 9) {
-                        name = name + vowels.substring(letter4, letter4 + 1) + vowels.substring(letter4, letter4 + 1);
-                    }
-                    else {
-                        name = name + vowels.substring(letter4, letter4 + 1);
-                    }
-                    
-                }
-                
-                System.out.println("Your pet, named " + name + ", has been born!");
+                generateName();
                 
                 System.out.println("");
                 System.out.println("_________________________________________________________________________________________________________________");
@@ -206,76 +300,16 @@ public class VirtualPet {
                 System.out.println("_________________________________________________________________________________________________________________");
                 System.out.println("");
                 if (game.equals("1")) {
-                    System.out.println("Game 1 - Number Guessing Game");
-                    System.out.println("Instructions: You have 5 tries to guess a random number between 1-100.");
-                
-                    rdmNum = rdm.nextInt(100) + 1;
-                    for (int guess = 5; guess > -1 && !(accurate); guess--) {
-                        System.out.print("Guess: ");
-                        int userNum = kb.nextInt();
-                        String useless = kb.nextLine();
-                        if (rdmNum > userNum) {
-                            System.out.println("Too Low.");
-                        }
-                        else if (rdmNum < userNum) {
-                            System.out.println("Too High.");
-                        }
-                        else {
-                            accurate = true;
-                            System.out.println("That is correct!!");
-                            earnings = Math.pow(2, guess) * 100;
-                            money += earnings;
-                        }
-                    }
-                    System.out.println("The correct number is " + rdmNum + ".");
+                    
+                    earnings = game1();
+                    
                 }
                 else {
-                    System.out.println("Game 2 - Guess the Pairs!");
-                    System.out.println("Instructions: You have a randomly shuffled sequence of 2A's, 2B's, 2C's, 2D's, 2E's, try to guess the location where two identical letters are located. You have 20 tries. ");
-                
-                    for (int shuffle = 0; shuffle < 10; shuffle++) {
-                        index = rdm.nextInt(correctStr.length());
-                        shuffledStr = shuffledStr + correctStr.charAt(index);
-                        if (index == 0) {
-                            correctStr = correctStr.substring(1);
-                        }
-                        else if (index == correctStr.length()) {
-                            correctStr = correctStr.substring(0, correctStr.length() - 1);
-                        }
-                        else {
-                            correctStr = correctStr.substring(0, index) + correctStr.substring(index + 1);
-                        }
-                    }
-                    for (int guessnd = 19; guessnd > -1; guessnd--) {
-                        System.out.println("Current Sequence: " + userStr);
-                        System.out.print("Enter the two positions with a space in the middle: ");
-                        int guess1 = kb.nextInt();
-                        int guess2 = kb.nextInt();
-                        String uselessGuess = kb.nextLine();
-                        if (shuffledStr.charAt(guess1) == shuffledStr.charAt(guess2)) {
-                            for (int lengths = 0; lengths < 10; lengths++) {
-                                if (lengths == guess1 || lengths == guess2) {
-                                    newStr = newStr + shuffledStr.charAt(guess1);
-                                }
-                                else {
-                                    newStr = newStr + userStr.charAt(lengths);
-                                }
-                            }
-                            userStr = newStr;
-                            newStr = "";
-                        }
-                        if (userStr.equals(shuffledStr)) {
-                            earnings = guessnd * 50;
-                            money += earnings;
-                            break;
-                        }
-                        else {
-                            earnings = 0;
-                        }
-                        System.out.println("You have " + guessnd + " guesses left. ");
-                    }
+                    
+                    earnings = game2();
+                    
                 }       
-                
+                money += earnings;
                 System.out.println("You earned $" + earnings + "!");
                 System.out.println("You currently have $" + money + "!");
                 
