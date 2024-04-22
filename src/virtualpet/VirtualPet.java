@@ -5,13 +5,14 @@
 package virtualpet;
 import java.util.*;
 import java.lang.*;
+import java.io.*;
 /**
  *
  * @author michael.roy-diclemen
  */
 public class VirtualPet {
     
-    public static void choosePet() {
+    public static String choosePet() {
         
         Scanner kb = new Scanner(System.in);
         
@@ -46,12 +47,10 @@ public class VirtualPet {
         else {
             System.out.println("You chose the rabbit!!"); 
         }
+        return pet;
     }
     public static void generateName() {
-        int letter1;
-        int letter2;
-        int letter3;
-        int letter4;
+        int ind;
         String name = "";
         String consonants = "bcdfghjklmnpqrstvwxyz";
         String vowels = "aeiou";
@@ -73,36 +72,25 @@ public class VirtualPet {
 
         // Name by generator
         else {
-            letter1 = rdm.nextInt(21);
-            if (rdm.nextInt(10) == 9) {
-                name = name + consonants.substring(letter1, letter1 + 1) + consonants.substring(letter1, letter1 + 1);
-            }
-            else {
-                name = name + consonants.substring(letter1, letter1 + 1);
-            }
-
-            letter2 = rdm.nextInt(5);
-            if (rdm.nextInt(10) == 9) {
-                name = name + vowels.substring(letter2, letter2 + 1) + vowels.substring(letter2, letter2 + 1);
-            }
-            else {
-                name = name + vowels.substring(letter2, letter2 + 1);
-            }
-
-            letter3 = rdm.nextInt(21);
-            if (rdm.nextInt(10) == 9) {
-                name = name + consonants.substring(letter3, letter3 + 1) + consonants.substring(letter3, letter3 + 1);
-            }
-            else {
-                name = name + consonants.substring(letter3, letter3 + 1);
-            }
-
-            letter4 = rdm.nextInt(5);
-            if (rdm.nextInt(10) == 9) {
-                name = name + vowels.substring(letter4, letter4 + 1) + vowels.substring(letter4, letter4 + 1);
-            }
-            else {
-                name = name + vowels.substring(letter4, letter4 + 1);
+            for (int letter = 0; letter < 4; letter ++) {
+                if (letter % 2 == 0) {
+                    ind = rdm.nextInt(21);
+                    if (rdm.nextInt(10) == 9) {
+                        name = name + consonants.charAt(ind) + consonants.charAt(ind);
+                    }
+                    else {
+                        name = name + consonants.charAt(ind);
+                    }
+                }
+                else {
+                    ind = rdm.nextInt(5);
+                    if (rdm.nextInt(10) == 9) {
+                        name = name + vowels.charAt(ind) + vowels.charAt(ind);
+                    }
+                    else {
+                        name = name + vowels.charAt(ind);
+                    }
+                }
             }
         }
         System.out.println("Your pet, named " + name + ", has been born!");
@@ -196,7 +184,19 @@ public class VirtualPet {
         }
         return earnings2;
     }
-
+    
+    public static void createFile(File enter) {
+        try {
+            PrintWriter output = new PrintWriter(enter);
+            output.print("boy");
+            output.close();
+        }
+        catch (IOException e) {
+            System.out.println("dumb");
+        }
+    }
+    
+    
     /**
      * @param args the command line arguments
      */
@@ -204,12 +204,6 @@ public class VirtualPet {
         
         Scanner kb = new Scanner(System.in);
         Random rdm = new Random();
-        int maxHealth = 0;
-        int maxFood = 0;
-        int maxEnergy = 0;
-        int currentHealth = 0;
-        int currentFood = 0;
-        int currentEnergy = 0;
         final int HEALTH_COST = 500;
         final int FOOD_COST = 500;
         final int ENERGY_COST = 500;
@@ -217,6 +211,11 @@ public class VirtualPet {
         double money = 0;
         boolean correct = false;
         boolean choosePet = true;
+        String pet = "";
+        String filePassword = "";
+        int[] maxStats = new int[3];
+        int[] currentStats = new int[3];
+        int[] interactStats = {0, 0, 0};
         
         // Starting screen 
         System.out.println(" _     ___ _   _  ___  _   _  ____    ____  _____ _____   ____   _    ____     _    ____ ___ ____  _____"); 
@@ -236,163 +235,245 @@ public class VirtualPet {
             String username = kb.nextLine();
             System.out.print("Password: ");
             String password = kb.nextLine();
+            
+            File enter = new File(username + ".txt");
+            
+            try {
+                Scanner input = new Scanner(enter);
+                username = input.nextLine();
+                filePassword = input.nextLine();
+                pet = input.nextLine();
+                for (int max = 0; max < maxStats.length; max ++) { // health food energy
+                    maxStats[max] = input.nextInt();
+                }
+                for (int current = 0; current < currentStats.length; current ++) {
+                    currentStats[current] = input.nextInt();
+                }
+                money = input.nextDouble();
+                input.close();
+                choosePet = false;
+            }
+            catch (IOException e) {
+                filePassword = password;
+                createFile(enter);
+            }
         
-        while ("snoopy".equalsIgnoreCase(username) && "toto".equalsIgnoreCase(password)) {
-            
-            correct = true;
-            
-            // User's action
-            if (choosePet) {
-                System.out.println("1. Start");
-            }
-            else {
-                System.out.println("1. Play/Interact");
-            }
-            System.out.println("2. Instructions");
-            System.out.println("3. Exit");
-            System.out.println("");
-            System.out.print("Enter what you want to do: ");
-            String action = kb.nextLine();
-            
-            System.out.println("");
-            System.out.println("_________________________________________________________________________________________________________________");
-            System.out.println(""); 
-            
-            if (("1".equalsIgnoreCase(action) || "start".equalsIgnoreCase(action)) && choosePet) {
-                
-                choosePet = false;       
-                
-                // Choose pet
-                
-                choosePet();
-                
+            while (filePassword.equalsIgnoreCase(password)) {
+
+                correct = true;
+
+                // User's action
+                if (choosePet) {
+                    System.out.println("1. Start");
+                }
+                else {
+                    System.out.println("1. Play/Interact");
+                }
+                System.out.println("2. Instructions");
+                System.out.println("3. Exit");
                 System.out.println("");
-                System.out.println("_________________________________________________________________________________________________________________");
-                System.out.println("");
-                
-                // Name pet
-                
-                generateName();
-                
-                System.out.println("");
-                System.out.println("_________________________________________________________________________________________________________________");
-                System.out.println("");
-                
-                // Maximum health, food, energy
-                maxHealth = rdm.nextInt(19) + 1;
-                currentHealth = maxHealth / 2;
-                maxFood = rdm.nextInt(19 - maxHealth) + 1;
-                currentFood = maxFood / 2;
-                maxEnergy = 20 - maxHealth - maxFood;
-                currentEnergy = maxEnergy / 2; 
-                
-                System.out.println("Maximum Health: " + maxHealth);
-                System.out.println("Maximum Food: " + maxFood);
-                System.out.println("Maximum Energy: " + maxEnergy);
-                
+                System.out.print("Enter what you want to do: ");
+                String action = kb.nextLine();
+
                 System.out.println("");
                 System.out.println("_________________________________________________________________________________________________________________");
                 System.out.println(""); 
-            }
-            else if ("1".equalsIgnoreCase(action) || "play".equalsIgnoreCase(action) || "interact".equalsIgnoreCase(action)) {
-                System.out.println("1. Play");
-                System.out.println("2. Interact");
-                System.out.print("Your Choice: ");
-                
-                String actionSpecific = kb.nextLine();
-                
-                System.out.println("");
-                System.out.println("_________________________________________________________________________________________________________________");
-                System.out.println(""); 
-                
-                if (actionSpecific.equalsIgnoreCase("1") || actionSpecific.equalsIgnoreCase("Play")) {
+
+                if (("1".equalsIgnoreCase(action) || "start".equalsIgnoreCase(action)) && choosePet) {
+
+                    choosePet = false;       
+
+                    // Choose pet
+
+                    pet = choosePet();
+
+                    System.out.println("");
+                    System.out.println("_________________________________________________________________________________________________________________");
+                    System.out.println("");
+
+                    // Name pet
+
+                    generateName();
+
+                    System.out.println("");
+                    System.out.println("_________________________________________________________________________________________________________________");
+                    System.out.println("");
+
+                    // Maximum health, food, energy
+                    maxStats[0] = rdm.nextInt(19) + 1;
+                    currentStats[0] = maxStats[0] / 2;
+                    maxStats[1] = rdm.nextInt(19 - maxStats[0]) + 1;
+                    currentStats[1] = maxStats[1] / 2;
+                    maxStats[2] = 20 - maxStats[0] - maxStats[1];
+                    currentStats[2]= maxStats[2] / 2; 
+
+                    System.out.println("Maximum Health: " + maxStats[0]);
+                    System.out.println("Maximum Food: " + maxStats[1]);
+                    System.out.println("Maximum Energy: " + maxStats[2]);
+
+                }
+                else if ("1".equalsIgnoreCase(action) || "play".equalsIgnoreCase(action) || "interact".equalsIgnoreCase(action)) {
+                    System.out.println("1. Play");
+                    System.out.println("2. Interact");
+                    System.out.print("Your Choice: ");
+
+                    String actionSpecific = kb.nextLine();
+
                     System.out.println("");
                     System.out.println("_________________________________________________________________________________________________________________");
                     System.out.println(""); 
 
-                    System.out.println("Game 1 - Number Guessing Game");
-                    System.out.println("Game 2 - Guess the Pairs!");
-                    System.out.println("Which game do you want to play? ");
-                    System.out.print("Game (1 or 2): ");
-                    String game = kb.nextLine();
+                    if (actionSpecific.equalsIgnoreCase("1") || actionSpecific.equalsIgnoreCase("Play")) {
+                        System.out.println("");
+                        System.out.println("_________________________________________________________________________________________________________________");
+                        System.out.println(""); 
 
-                    System.out.println("");
-                    System.out.println("_________________________________________________________________________________________________________________");
-                    System.out.println("");
-                    if (game.equals("1")) {
+                        System.out.println("Game 1 - Number Guessing Game");
+                        System.out.println("Game 2 - Guess the Pairs!");
+                        System.out.println("Which game do you want to play? ");
+                        System.out.print("Game (1 or 2): ");
+                        String game = kb.nextLine();
 
-                        earnings = game1();
+                        System.out.println("");
+                        System.out.println("_________________________________________________________________________________________________________________");
+                        System.out.println("");
+                        if (game.equals("1")) {
 
+                            earnings = game1();
+
+                        }
+                        else {
+
+                            earnings = game2();
+
+                        }       
+                        money += earnings;
+                        System.out.println("You earned $" + earnings + "!");
+                        System.out.println("You currently have $" + money + "!");
+
+                        System.out.println("");
+                        System.out.println("_________________________________________________________________________________________________________________");
+                        System.out.println("");   
                     }
                     else {
-
-                        earnings = game2();
-
-                    }       
-                    money += earnings;
-                    System.out.println("You earned $" + earnings + "!");
-                    System.out.println("You currently have $" + money + "!");
-
-                    System.out.println("");
-                    System.out.println("_________________________________________________________________________________________________________________");
-                    System.out.println("");   
-                }
-                else {
-                    System.out.println("What do you want to do? (Enter the number)");
-                    System.out.println("1. Play with your pet for $" + ENERGY_COST);
-                    System.out.println("2. Feed your pet for $" + FOOD_COST);
-                    System.out.println("3. Groom your pet for $" + HEALTH_COST);
-                    System.out.print("Your choice: ");
-                    System.out.println("");
-                    String interact = kb.nextLine();
-                    if (interact.equals("1")) {
-                        if (currentEnergy < maxEnergy && money >= ENERGY_COST) {
-                            currentEnergy ++;
-                            money -= ENERGY_COST;
-                            System.out.println("You bought your pet a toy.");
-                            System.out.println("You have $" + money + " left.");
+                        System.out.println("What do you want to do? (Enter the number)");
+                        System.out.println("1. Play with your pet for $" + ENERGY_COST);
+                        System.out.println("2. Feed your pet for $" + FOOD_COST);
+                        System.out.println("3. Groom your pet for $" + HEALTH_COST);
+                        System.out.print("Your choice: ");
+                        System.out.println("");
+                        String interact = kb.nextLine();
+                        if (interact.equals("1")) {
+                            if (currentStats[2] < maxStats[2] && money >= ENERGY_COST) {
+                                currentStats[2] ++;
+                                interactStats[2] ++;
+                                money -= ENERGY_COST;
+                                System.out.println("You bought your pet a toy.");
+                                System.out.println("You have $" + money + " left.");
+                            }
+                            else if (currentStats[2] == maxStats[2]) {
+                                System.out.println("Your pet has enough energy now. ");
+                            }
+                            else {
+                                System.out.println("You are poor, go earn money!!");
+                            }
                         }
-                        else if (currentEnergy == maxEnergy) {
-                            System.out.println("Your pet has enough energy now. ");
-                        }
-                        else {
-                            System.out.println("You are poor, go earn money!!");
-                        }
-                    }
-                    else if (interact.equals("2")) {
-                        if (currentFood < maxFood && money >= FOOD_COST) {
-                            currentFood ++;
-                            money -= FOOD_COST;
-                            System.out.println("You bought your pet food.");
-                            System.out.println("You have $" + money + " left.");
-                        }
-                        else if (currentFood == maxFood) {
-                            System.out.println("Your pet has enough food now. ");
+                        else if (interact.equals("2")) {
+                            if (currentStats[1] < maxStats[1] && money >= FOOD_COST) {
+                                currentStats[1] ++;
+                                interactStats[1] ++;
+                                money -= FOOD_COST;
+                                System.out.println("You bought your pet food.");
+                                System.out.println("You have $" + money + " left.");
+                            }
+                            else if (currentStats[1] == maxStats[1]) {
+                                System.out.println("Your pet has enough food now. ");
+                            }
+                            else {
+                                System.out.println("You are poor, go earn money!!");
+                            }
                         }
                         else {
-                            System.out.println("You are poor, go earn money!!");
-                        }
-                    }
-                    else {
-                        if (currentHealth < maxHealth && money >= HEALTH_COST) {
-                            currentHealth ++;
-                            money -= HEALTH_COST;
-                            System.out.println("You groomed your pet.");
-                            System.out.println("You have $" + money + " left.");
-                        }
-                        else if (currentHealth == maxHealth) {
-                            System.out.println("Your pet is very healthy now. ");
-                        }
-                        else {
-                            System.out.println("You are poor, go earn money!!");
+                            if (currentStats[0] < maxStats[0] && money >= HEALTH_COST) {
+                                currentStats[0] ++;
+                                interactStats[0] ++;
+                                money -= HEALTH_COST;
+                                System.out.println("You groomed your pet.");
+                                System.out.println("You have $" + money + " left.");
+                            }
+                            else if (currentStats[0] == maxStats[0]) {
+                                System.out.println("Your pet is very healthy now. ");
+                            }
+                            else {
+                                System.out.println("You are poor, go earn money!!");
+                            }
                         }
                     }
                 }
+                else if (("3".equalsIgnoreCase(action) || "exit".equalsIgnoreCase(action)) && !(choosePet)) {
+                    try {
+                        PrintWriter write = new PrintWriter(enter);
+                        write.println(username);
+                        write.println(password);
+                        write.println(pet);
+                        for (int maxW = 0; maxW < maxStats.length; maxW ++) {
+                            write.println(maxStats[maxW]);
+                        }
+                        for (int currentW = 0; currentW < maxStats.length; currentW ++) {
+                            write.println(currentStats[currentW]);
+                        }
+                        write.println(money);
+                        write.close();
+                    }
+                    catch (IOException e) {
+                        System.out.println("dumb");
+                    }
+                    
+                    System.out.println("You have groomed your pet for " + interactStats[0] + " times!");
+                    if (interactStats[0] >= 10) {
+                        System.out.println("You have earned the \"Gold Medal for Pet Grooming\"");
+                    }
+                    else if (interactStats[0] >= 5) {
+                        System.out.println("You have earned the \"Silver Medal for Pet Grooming\"");
+                    }
+                    else if (interactStats[0] >= 3) {
+                        System.out.println("You have earned the \"Bronze Medal for Pet Grooming\"");
+                    }
+                    System.out.println();
+                    
+                    System.out.println("You have fed your pet for " + interactStats[1] + " times!");
+                    if (interactStats[1] >= 10) {
+                        System.out.println("You have earned the \"Gold Medal for Pet Feeding\"");
+                    }
+                    else if (interactStats[1] >= 5) {
+                        System.out.println("You have earned the \"Silver Medal for Pet Feeding\"");
+                    }
+                    else if (interactStats[1] >= 3) {
+                        System.out.println("You have earned the \"Bronze Medal for Pet Feeding\"");
+                    }
+                    System.out.println();
+                    
+                    System.out.println("You bought your pet " + interactStats[0] + " toys!");
+                    if (interactStats[2] >= 10) {
+                        System.out.println("You have earned the \"Gold Medal for Toy Collecting\"");
+                    }
+                    else if (interactStats[2] >= 5) {
+                        System.out.println("You have earned the \"Silver Medal for Toy Collecting\"");
+                    }
+                    else if (interactStats[2] >= 3) {
+                        System.out.println("You have earned the \"Bronze Medal for Toy Collecting\"");
+                    }
+                    System.out.println();
+                    
+                    System.exit(0);
+                }
+                else if (("3".equalsIgnoreCase(action) || "exit".equalsIgnoreCase(action)) && (choosePet)) {
+                    System.out.println("Choose a pet before you leave.");
+                }
+                System.out.println("");
+                System.out.println("_________________________________________________________________________________________________________________");
+                System.out.println(""); 
             }
-            else if ("3".equalsIgnoreCase(action) || "exit".equalsIgnoreCase(action)) {
-                System.exit(0);
-            }
-        }
         System.out.println("That's wrong!! You have " + tries + " tries left. ");
         System.out.println("");
         System.out.println("_________________________________________________________________________________________________________________");
