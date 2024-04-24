@@ -49,7 +49,7 @@ public class VirtualPet {
         }
         return pet;
     }
-    public static void generateName() {
+    public static String generateName() {
         int ind;
         String name = "";
         String consonants = "bcdfghjklmnpqrstvwxyz";
@@ -94,7 +94,9 @@ public class VirtualPet {
             }
         }
         System.out.println("Your pet, named " + name + ", has been born!");
+        return name;
     }
+    
     public static double game1() {
         
         int rdmNum;
@@ -184,16 +186,41 @@ public class VirtualPet {
         }
         return earnings2;
     }
-    
-    public static void createFile(File enter) {
-        try {
-            PrintWriter output = new PrintWriter(enter);
-            output.print("boy");
-            output.close();
-        }
-        catch (IOException e) {
-            System.out.println("dumb");
-        }
+    public static void determineAward(int[] interactStats) {
+        System.out.println("You have groomed your pet for " + interactStats[0] + " times!");
+                    if (interactStats[0] >= 10) {
+                        System.out.println("You have earned the \"Gold Medal for Pet Grooming\"");
+                    }
+                    else if (interactStats[0] >= 5) {
+                        System.out.println("You have earned the \"Silver Medal for Pet Grooming\"");
+                    }
+                    else if (interactStats[0] >= 3) {
+                        System.out.println("You have earned the \"Bronze Medal for Pet Grooming\"");
+                    }
+                    System.out.println();
+                    
+                    System.out.println("You have fed your pet for " + interactStats[1] + " times!");
+                    if (interactStats[1] >= 10) {
+                        System.out.println("You have earned the \"Gold Medal for Pet Feeding\"");
+                    }
+                    else if (interactStats[1] >= 5) {
+                        System.out.println("You have earned the \"Silver Medal for Pet Feeding\"");
+                    }
+                    else if (interactStats[1] >= 3) {
+                        System.out.println("You have earned the \"Bronze Medal for Pet Feeding\"");
+                    }
+                    System.out.println();
+                    
+                    System.out.println("You bought your pet " + interactStats[0] + " toys!");
+                    if (interactStats[2] >= 10) {
+                        System.out.println("You have earned the \"Gold Medal for Toy Collecting\"");
+                    }
+                    else if (interactStats[2] >= 5) {
+                        System.out.println("You have earned the \"Silver Medal for Toy Collecting\"");
+                    }
+                    else if (interactStats[2] >= 3) {
+                        System.out.println("You have earned the \"Bronze Medal for Toy Collecting\"");
+                    }
     }
     
     
@@ -216,6 +243,7 @@ public class VirtualPet {
         int[] maxStats = new int[3];
         int[] currentStats = new int[3];
         int[] interactStats = {0, 0, 0};
+        String name = "";
         
         // Starting screen 
         System.out.println(" _     ___ _   _  ___  _   _  ____    ____  _____ _____   ____   _    ____     _    ____ ___ ____  _____"); 
@@ -243,6 +271,7 @@ public class VirtualPet {
                 username = input.nextLine();
                 filePassword = input.nextLine();
                 pet = input.nextLine();
+                name = input.nextLine();
                 for (int max = 0; max < maxStats.length; max ++) { // health food energy
                     maxStats[max] = input.nextInt();
                 }
@@ -255,7 +284,6 @@ public class VirtualPet {
             }
             catch (IOException e) {
                 filePassword = password;
-                createFile(enter);
             }
         
             while (filePassword.equalsIgnoreCase(password)) {
@@ -293,7 +321,7 @@ public class VirtualPet {
 
                     // Name pet
 
-                    generateName();
+                    name = generateName();
 
                     System.out.println("");
                     System.out.println("_________________________________________________________________________________________________________________");
@@ -416,6 +444,7 @@ public class VirtualPet {
                         write.println(username);
                         write.println(password);
                         write.println(pet);
+                        write.println(name);
                         for (int maxW = 0; maxW < maxStats.length; maxW ++) {
                             write.println(maxStats[maxW]);
                         }
@@ -426,44 +455,10 @@ public class VirtualPet {
                         write.close();
                     }
                     catch (IOException e) {
-                        System.out.println("dumb");
+                        System.out.println("No file to write to.");
                     }
                     
-                    System.out.println("You have groomed your pet for " + interactStats[0] + " times!");
-                    if (interactStats[0] >= 10) {
-                        System.out.println("You have earned the \"Gold Medal for Pet Grooming\"");
-                    }
-                    else if (interactStats[0] >= 5) {
-                        System.out.println("You have earned the \"Silver Medal for Pet Grooming\"");
-                    }
-                    else if (interactStats[0] >= 3) {
-                        System.out.println("You have earned the \"Bronze Medal for Pet Grooming\"");
-                    }
-                    System.out.println();
-                    
-                    System.out.println("You have fed your pet for " + interactStats[1] + " times!");
-                    if (interactStats[1] >= 10) {
-                        System.out.println("You have earned the \"Gold Medal for Pet Feeding\"");
-                    }
-                    else if (interactStats[1] >= 5) {
-                        System.out.println("You have earned the \"Silver Medal for Pet Feeding\"");
-                    }
-                    else if (interactStats[1] >= 3) {
-                        System.out.println("You have earned the \"Bronze Medal for Pet Feeding\"");
-                    }
-                    System.out.println();
-                    
-                    System.out.println("You bought your pet " + interactStats[0] + " toys!");
-                    if (interactStats[2] >= 10) {
-                        System.out.println("You have earned the \"Gold Medal for Toy Collecting\"");
-                    }
-                    else if (interactStats[2] >= 5) {
-                        System.out.println("You have earned the \"Silver Medal for Toy Collecting\"");
-                    }
-                    else if (interactStats[2] >= 3) {
-                        System.out.println("You have earned the \"Bronze Medal for Toy Collecting\"");
-                    }
-                    System.out.println();
+                    determineAward(interactStats);
                     
                     System.exit(0);
                 }
